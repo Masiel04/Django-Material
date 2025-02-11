@@ -1,0 +1,116 @@
+{% extends "plantilla.html" %}
+
+{% block contenido %}
+<div class="container mt-5">
+    <div class="row justify-content-center align-items-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow-lg rounded-4 border-0">
+                <div class="card-body p-5">
+                    <h3 class="text-center mb-4 text-primary"><i class="fas fa-cogs"></i> ACTUALIZAR PEDIDO</h3>
+                    <form enctype="multipart/form-data" action="/procesarEdicionPedido/" method="POST">
+                        {% csrf_token %}
+
+                        <!-- ID del pedido -->
+                        <div class="mb-4">
+                            <label for="id_pedido" class="form-label fs-5"><b>ID del Pedido:</b></label>
+                            <input type="hidden" name="id_pedido" value="{{ pedido.id_pedido }}">
+                            <input type="text" class="form-control form-control-lg" id="id_pedido" value="{{ pedido.id_pedido }}" readonly>
+                        </div>
+
+                        <!-- Material -->
+                        <div class="mb-4">
+                            <label for="material" class="form-label fs-5"><b>MATERIAL:</b></label>
+                            <select name="material" id="material" class="form-control form-control-lg" required>
+                                <option value="">Selecciona un material</option>
+                                {% for material in materiales %}
+                                    <option value="{{ material.id_material }}" {% if material.id_material == pedido.material.id_material %}selected{% endif %}>{{ material.nombre }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <!-- Distribuidor -->
+                        <div class="mb-4">
+                            <label for="distribuidor" class="form-label fs-5"><b>DISTRIBUIDOR:</b></label>
+                            <select name="distribuidor" id="distribuidor" class="form-control form-control-lg" required>
+                                <option value="">Selecciona un distribuidor</option>
+                                {% for distribuidor in distribuidores %}
+                                    <option value="{{ distribuidor.id_dist }}" {% if distribuidor.id_dist == pedido.distribuidor.id_dist %}selected{% endif %}>{{ distribuidor.nombre }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <!-- Cantidad -->
+                        <div class="mb-4">
+                            <label for="cantidad" class="form-label fs-5"><b>CANTIDAD:</b></label>
+                            <input type="number" name="cantidad" id="cantidad" class="form-control form-control-lg" value="{{ pedido.cantidad }}" required>
+                        </div>
+
+                        <!-- Fecha del Pedido -->
+                        <div class="mb-4">
+                            <label for="fecha_pedido" class="form-label fs-5"><b>FECHA DEL PEDIDO:</b></label>
+                            <input type="date" name="fecha_pedido" id="fecha_pedido" class="form-control form-control-lg" value="{{ pedido.fecha_pedido|date:"Y-m-d" }}" required>
+                        </div>
+
+                        <!-- Estado -->
+                        <div class="mb-4">
+                            <label for="estado" class="form-label fs-5"><b>ESTADO:</b></label>
+                            <select name="estado" id="estado" class="form-control form-control-lg" required>
+                                <option value="PENDIENTE" {% if pedido.estado == "PENDIENTE" %}selected{% endif %}>Pendiente</option>
+                                <option value="ENTREGADO" {% if pedido.estado == "ENTREGADO" %}selected{% endif %}>Entregado</option>
+                                <option value="CANCELADO" {% if pedido.estado == "CANCELADO" %}selected{% endif %}>Cancelado</option>
+                            </select>
+                        </div>
+
+                        <!-- Botones -->
+                        <div class="d-flex justify-content-center gap-3">
+                            <button type="submit" class="btn btn-primary btn-lg w-50"><i class="fas fa-save"></i> Guardar</button>
+                            <a href="/listadoPedido/" class="btn btn-outline-danger btn-lg w-50"><i class="fas fa-times-circle"></i> Cancelar</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Estilos adicionales -->
+<style>
+    .card {
+        background-color: #f8f9fa;
+        border-radius: 15px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    .card-body {
+        background-color: #ffffff;
+        padding: 3rem;
+    }
+    .form-label {
+        font-size: 1.1rem;
+        color: #333333;
+    }
+    .form-control {
+        border-radius: 8px;
+        border: 1px solid #ccc;
+    }
+    .btn {
+        font-size: 1.1rem;
+        font-weight: 600;
+        border-radius: 10px;
+    }
+    .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+    }
+    .btn-outline-danger {
+        border-color: #dc3545;
+        color: #dc3545;
+    }
+    .btn-outline-danger:hover {
+        background-color: #dc3545;
+        color: white;
+    }
+    .fs-5 {
+        font-size: 1.1rem;
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,123 @@
+{% extends "./plantilla.html" %}
+{% block contenido %}
+<div class="container mt-5">
+    <div class="row justify-content-center align-items-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow-lg rounded-4 border-0">
+                <div class="card-body p-5">
+                    <h3 class="text-center mb-4 text-primary"><i class="fas fa-cogs"></i> ACTUALIZAR MATERIAL</h3>
+                    <form enctype="multipart/form-data" action="/procesarEdicionMaterial/" id="frm_editar_material" method="POST">
+                        {% csrf_token %}
+
+                        <!-- ID del material -->
+                        <div class="mb-4">
+                            <label for="id_material" class="form-label fs-5"><b>ID:</b></label>
+                            <input type="hidden" name="id_material" value="{{ material.id_material }}">
+                            <input type="text" class="form-control form-control-lg" id="id_material" value="{{ material.id_material }}" readonly>
+                        </div>
+
+                        <!-- Nombre del material -->
+                        <div class="mb-4">
+                            <label for="txt_nombre" class="form-label fs-5"><b>NOMBRE DEL MATERIAL:</b></label>
+                            <input type="text" name="txt_nombre" id="txt_nombre" class="form-control form-control-lg" value="{{ material.nombre }}" required>
+                        </div>
+
+                        <!-- Descripción -->
+                        <div class="mb-4">
+                            <label for="txt_descripcion" class="form-label fs-5"><b>DESCRIPCIÓN:</b></label>
+                            <textarea name="txt_descripcion" id="txt_descripcion" class="form-control form-control-lg" rows="4">{{ material.descripcion }}</textarea>
+                        </div>
+
+                        <!-- Unidad de medida -->
+                        <div class="mb-4">
+                            <label for="txt_unidad_medida" class="form-label fs-5"><b>UNIDAD DE MEDIDA:</b></label>
+                            <input type="text" name="txt_unidad_medida" id="txt_unidad_medida" class="form-control form-control-lg" value="{{ material.unidad_medida }}" required>
+                        </div>
+
+                        <!-- Precio unitario -->
+                        <div class="mb-4">
+                            <label for="txt_precio_unitario" class="form-label fs-5"><b>PRECIO UNITARIO:</b></label>
+                            <input type="number" name="txt_precio_unitario" id="txt_precio_unitario" class="form-control form-control-lg" value="{{ material.precio_unitario|floatformat:2 }}" required step="0.01">
+
+                        </div>
+
+                        <!-- Foto del material -->
+                        <div class="mb-4">
+                            <label for="foto_mat" class="form-label fs-5"><b>Foto del Material:</b></label>
+                            {% if material.foto_mat %}
+                                <p>Archivo actual: <a href="{{ material.foto_mat.url }}" target="_blank">Ver archivo</a></p>
+                            {% endif %}
+                            <input type="file" name="foto_mat" id="foto_mat" class="form-control form-control-lg" accept="image/png, image/jpeg">
+                        </div>
+
+                        <!-- Botones -->
+                        <div class="d-flex justify-content-center gap-3">
+                            <button type="submit" class="btn btn-primary btn-lg w-50"><i class="fas fa-save"></i> Guardar</button>
+                            <a href="/listadoMaterial/" class="btn btn-outline-danger btn-lg w-50"><i class="fas fa-times-circle"></i> Cancelar</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Estilos adicionales -->
+<style>
+    .card {
+        background-color: #f8f9fa;
+        border-radius: 15px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    .card-body {
+        background-color: #ffffff;
+        padding: 3rem;
+    }
+    .form-label {
+        font-size: 1.1rem;
+        color: #333333;
+    }
+    .form-control {
+        border-radius: 8px;
+        border: 1px solid #ccc;
+    }
+    .btn {
+        font-size: 1.1rem;
+        font-weight: 600;
+        border-radius: 10px;
+    }
+    .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+    }
+    .btn-outline-danger {
+        border-color: #dc3545;
+        color: #dc3545;
+    }
+    .btn-outline-danger:hover {
+        background-color: #dc3545;
+        color: white;
+    }
+    .fs-5 {
+        font-size: 1.1rem;
+    }
+</style>
+
+<!-- Script para el input de archivo -->
+<script>
+    $(document).ready(function () {
+        $("#foto_mat").fileinput({
+            language: 'es', // Cambiar el idioma a español
+            allowedFileExtensions: ["png", "jpg", "jpeg"], // Extensiones permitidas
+            showCaption: false, // Ocultar el título del archivo
+            dropZoneEnabled: true, // Habilitar zona de arrastrar y soltar
+            browseLabel: "Seleccionar archivo", // Texto para el botón "Browse"
+            removeLabel: "Eliminar", // Texto para el botón "Remove"
+            uploadLabel: "Subir", // Texto para el botón "Upload"
+            dropZoneTitle: "Arrastra y suelta los archivos aquí", // Mensaje para la zona de arrastre
+            maxFileSize: 2048, // Tamaño máximo del archivo (en KB)
+        });
+    });
+</script>
+
+{% endblock %}

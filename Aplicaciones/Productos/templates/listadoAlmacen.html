@@ -1,0 +1,96 @@
+{% extends "./plantilla.html" %}
+
+{% block contenido %}
+<br>
+<br>
+<h3 class="text-center mb-4">LISTADO DE ALMACENES</h3>
+
+<!-- Estilos de DataTables -->
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.3.6/css/buttons.dataTables.min.css">
+
+<!-- Font Awesome para iconos -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+<div class="text-end mb-4">
+    <a href="/nuevoAlmacen" class="btn btn-primary">
+        <i class="fas fa-plus"></i> Nuevo Almacén
+    </a>
+</div>
+
+<div class="card shadow">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped table-hover" id='tb_almacen'>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>NOMBRE</th>
+                        <th>DIRECCIÓN</th>
+                        <th>CAPACIDAD</th>
+                        <th>ACCIONES</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for alm in almacenes %}
+                    <tr>
+                        <td>{{ alm.id_alm }}</td>
+                        <td>{{ alm.nombre }}</td>
+                        <td>{{ alm.direccion }}</td>
+                        <td>{{ alm.capacidad }}</td>
+                        <td>
+                            <a href="/editarAlmacen/{{ alm.id_alm }}" class="btn btn-warning btn-sm me-2">Editar</a>
+                            <a onclick="return confirm('Está seguro de eliminar permanentemente este almacén?')" href="/eliminarAlmacen/{{ alm.id_alm }}" class="btn btn-danger btn-sm">Eliminar</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- jQuery (Debe cargarse antes de DataTables) -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- DataTables y sus botones -->
+<script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.3.6/js/dataTables.buttons.min.js"></script>
+
+<!-- Librerías para exportar PDF -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
+
+<!-- Librerías para exportar Excel y Print -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
+
+<!-- Activar DataTable con botones -->
+<script>
+    $(document).ready(function() {
+        $('#tb_almacen').DataTable({
+            dom: 'Bfrtip',
+            buttons: [
+                {
+                    extend: 'excelHtml5',
+                    text: '<i class="fas fa-file-excel"></i> Excel',
+                    className: 'btn btn-success'
+                },
+                {
+                    extend: 'pdfHtml5',
+                    text: '<i class="fas fa-file-pdf"></i> PDF',
+                    className: 'btn btn-danger'
+                },
+                {
+                    extend: 'print',
+                    text: '<i class="fas fa-print"></i> Imprimir',
+                    className: 'btn btn-primary'
+                }
+            ],
+            responsive: true
+        });
+    });
+</script>
+
+{% endblock %}

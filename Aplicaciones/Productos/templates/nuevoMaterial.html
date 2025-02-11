@@ -1,0 +1,166 @@
+{% extends "./plantilla.html" %}
+
+{% block contenido %}
+<div class="container mt-5">
+    <div class="row justify-content-center align-items-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow-lg rounded-4 border-0">
+                <div class="card-body p-5">
+                    <h3 class="text-center mb-4 text-primary"><i class="fas fa-cogs"></i> REGISTRO DE MATERIALES</h3>
+                    <form enctype="multipart/form-data" action="/guardarMaterial/" id="frm_nuevo_material" method="POST">
+                        {% csrf_token %}
+
+                        <!-- Nombre del material -->
+                        <div class="mb-4">
+                            <label for="txt_nombre" class="form-label fs-5"><b>NOMBRE DEL MATERIAL:</b></label>
+                            <input type="text" name="txt_nombre" id="txt_nombre" class="form-control form-control-lg" placeholder="Ingrese el nombre del material" required>
+                        </div>
+
+                        <!-- Descripción -->
+                        <div class="mb-4">
+                            <label for="txt_descripcion" class="form-label fs-5"><b>DESCRIPCIÓN:</b></label>
+                            <textarea name="txt_descripcion" id="txt_descripcion" class="form-control form-control-lg" placeholder="Ingrese una descripción breve" rows="4"></textarea>
+                        </div>
+
+                        <!-- Unidad de medida -->
+                        <div class="mb-4">
+                            <label for="txt_unidad_medida" class="form-label fs-5"><b>UNIDAD DE MEDIDA:</b></label>
+                            <input type="text" name="txt_unidad_medida" id="txt_unidad_medida" class="form-control form-control-lg" placeholder="Ej. kg, litro" required>
+                        </div>
+
+                        <!-- Precio unitario -->
+                        <div class="mb-4">
+                            <label for="txt_precio_unitario" class="form-label fs-5"><b>PRECIO UNITARIO:</b></label>
+                            <input type="number" name="txt_precio_unitario" id="txt_precio_unitario" class="form-control form-control-lg" required step="0.01" placeholder="Ingrese el precio por unidad">
+                        </div>
+
+                        <!-- Foto del material -->
+                        <div class="mb-4">
+                            <label for="foto_mat" class="form-label fs-5"><b>Foto del Material:</b></label>
+                            <input type="file" name="foto_mat" id="foto_mat" class="form-control form-control-lg" accept="image/png, image/jpeg">
+                        </div>
+
+                        <!-- Botones -->
+                        <div class="d-flex justify-content-center gap-3">
+                            <button type="submit" class="btn btn-primary btn-lg w-50"><i class="fas fa-save"></i> Guardar</button>
+                            <button type="reset" class="btn btn-outline-danger btn-lg w-50"><i class="fas fa-times-circle"></i> Cancelar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Estilos adicionales -->
+<style>
+    .card {
+        background-color: #f8f9fa;
+        border-radius: 15px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    .card-body {
+        background-color: #ffffff;
+        padding: 3rem;
+    }
+    .form-label {
+        font-size: 1.1rem;
+        color: #333333;
+    }
+    .form-control {
+        border-radius: 8px;
+        border: 1px solid #ccc;
+    }
+    .btn {
+        font-size: 1.1rem;
+        font-weight: 600;
+        border-radius: 10px;
+    }
+    .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+    }
+    .btn-outline-danger {
+        border-color: #dc3545;
+        color: #dc3545;
+    }
+    .btn-outline-danger:hover {
+        background-color: #dc3545;
+        color: white;
+    }
+    .fs-5 {
+        font-size: 1.1rem;
+    }
+</style>
+
+<script>
+    $(document).ready(function () {
+        // Regla personalizada para validar letras
+        $.validator.addMethod("soloLetras", function (value, element) {
+            return this.optional(element) || /^[a-zA-Z\s]+$/.test(value);
+        }, "Solo se permiten letras.");
+
+        // Validación del formulario
+        $("#frm_nuevo_material").validate({
+            rules: {
+                txt_nombre: {
+                    required: true,
+                    soloLetras: true
+                },
+                txt_unidad_medida: {
+                    required: true,
+                    soloLetras: true
+                },
+                txt_precio_unitario: {
+                    required: true,
+                    number: true,
+                    min: 0
+                },
+                txt_descripcion: {
+                    required: true
+                }
+            },
+            messages: {
+                txt_nombre: {
+                    required: "El nombre es obligatorio."
+                },
+                txt_unidad_medida: {
+                    required: "La unidad de medida es obligatoria."
+                },
+                txt_precio_unitario: {
+                    required: "El precio unitario es obligatorio.",
+                    number: "Debe ser un número válido.",
+                    min: "El precio no puede ser negativo."
+                },
+                txt_descripcion: {
+                    required: "La descripción es obligatoria."
+                }
+            },
+            unhighlight: function (element) {
+                $(element).addClass("is-valid").removeClass("is-invalid");
+            },
+            errorPlacement: function (error, element) {
+                error.insertAfter(element);
+            }
+        });
+    });
+</script>
+
+<!-- Script para el input de archivo -->
+<script>
+    $(document).ready(function () {
+        $("#foto_mat").fileinput({
+            language: 'es', // Cambiar el idioma a español
+            allowedFileExtensions: ["png", "jpg", "jpeg"], // Extensiones permitidas
+            showCaption: false, // Ocultar el título del archivo
+            dropZoneEnabled: true, // Habilitar zona de arrastrar y soltar
+            browseLabel: "Seleccionar archivo", // Texto para el botón "Browse"
+            removeLabel: "Eliminar", // Texto para el botón "Remove"
+            uploadLabel: "Subir", // Texto para el botón "Upload"
+            dropZoneTitle: "Arrastra y suelta los archivos aquí", // Mensaje para la zona de arrastre
+            maxFileSize: 2048, // Tamaño máximo del archivo (en KB)
+        });
+    });
+</script>
+
+{% endblock %}

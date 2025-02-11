@@ -1,0 +1,160 @@
+{% extends "./plantilla.html" %}
+
+{% block contenido %}
+<div class="container mt-5">
+    <div class="row justify-content-center align-items-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow-lg rounded-4 border-0">
+                <div class="card-body p-5">
+                    <h3 class="text-center mb-4 text-primary"><i class="fas fa-cogs"></i> REGISTRO DE PEDIDO</h3>
+                    <form enctype="multipart/form-data" action="/guardarPedido/" id="frm_nuevo_pedido" method="POST">
+                        {% csrf_token %}
+
+                        <!-- Material -->
+                        <div class="form-group">
+                            <label for="material">Material</label>
+                            <select name="material" id="material" class="form-control">
+                                {% for material in materiales %}
+                                    <option value="{{ material.id_material }}">{{ material.nombre }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="distribuidor">Distribuidor</label>
+                            <select name="distribuidor" id="distribuidor" class="form-control">
+                                {% for distribuidor in distribuidores %}
+                                    <option value="{{ distribuidor.id_dist }}">{{ distribuidor.nombre }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <!-- Cantidad -->
+                        <div class="mb-4">
+                            <label for="cantidad" class="form-label fs-5"><b>CANTIDAD:</b></label>
+                            <input type="number" name="cantidad" id="cantidad" class="form-control form-control-lg" placeholder="Ingrese la cantidad" required min="1">
+                        </div>
+
+                        <!-- Estado -->
+                        <div class="mb-4">
+                            <label for="estado" class="form-label fs-5"><b>ESTADO:</b></label>
+                            <select name="estado" id="estado" class="form-select form-select-lg" required>
+                                <option value="PENDIENTE">Pendiente</option>
+                                <option value="ENTREGADO">Entregado</option>
+                                <option value="CANCELADO">Cancelado</option>
+                            </select>
+                        </div>
+
+                        <!-- Botones -->
+                        <div class="d-flex justify-content-center gap-3">
+                            <button type="submit" class="btn btn-primary btn-lg w-50"><i class="fas fa-save"></i> Guardar</button>
+                            <button type="reset" class="btn btn-outline-danger btn-lg w-50"><i class="fas fa-times-circle"></i> Cancelar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Estilos adicionales -->
+<style>
+    .card {
+        background-color: #f8f9fa;
+        border-radius: 15px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    .card-body {
+        background-color: #ffffff;
+        padding: 3rem;
+    }
+    .form-label {
+        font-size: 1.1rem;
+        color: #333333;
+    }
+    .form-control {
+        border-radius: 8px;
+        border: 1px solid #ccc;
+    }
+    .btn {
+        font-size: 1.1rem;
+        font-weight: 600;
+        border-radius: 10px;
+    }
+    .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+    }
+    .btn-outline-danger {
+        border-color: #dc3545;
+        color: #dc3545;
+    }
+    .btn-outline-danger:hover {
+        background-color: #dc3545;
+        color: white;
+    }
+    .fs-5 {
+        font-size: 1.1rem;
+    }
+</style>
+
+<!-- Incluir jQuery y jQuery Validate antes del script -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/jquery.validation/1.19.5/jquery.validate.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        // Regla personalizada para validar solo números enteros
+        $.validator.addMethod("soloNumeros", function (value, element) {
+            return this.optional(element) || /^[0-9]+$/.test(value);
+        }, "Solo se permiten números enteros.");
+
+        // Inicializar la validación del formulario
+        $("#frm_nuevo_pedido").validate({
+            errorClass: "is-invalid", // Agrega la clase de Bootstrap para errores
+            validClass: "is-valid",   // Agrega la clase de Bootstrap para éxito
+            rules: {
+                material: {
+                    required: true
+                },
+                distribuidor: {
+                    required: true
+                },
+                cantidad: {
+                    required: true,
+                    soloNumeros: true,
+                    min: 1
+                },
+                estado: {
+                    required: true
+                }
+            },
+            messages: {
+                material: {
+                    required: "El material es obligatorio."
+                },
+                distribuidor: {
+                    required: "El distribuidor es obligatorio."
+                },
+                cantidad: {
+                    required: "La cantidad es obligatoria.",
+                    soloNumeros: "Debe ser un número entero.",
+                    min: "La cantidad no puede ser menor que 1."
+                },
+                estado: {
+                    required: "El estado es obligatorio."
+                }
+            },
+            highlight: function (element) {
+                $(element).addClass("is-invalid").removeClass("is-valid");
+            },
+            unhighlight: function (element) {
+                $(element).addClass("is-valid").removeClass("is-invalid");
+            },
+            errorPlacement: function (error, element) {
+                error.insertAfter(element);
+            }
+        });
+    });
+</script>
+
+{% endblock %}

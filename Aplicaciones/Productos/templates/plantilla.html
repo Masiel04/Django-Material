@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Abastecimiento de Materiales</title>
+
+    <!-- jQuery (SIEMPRE DEBE IR PRIMERO) -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    <!-- jQuery Validate -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
+
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
+    <!-- iziToast CSS y JS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/izitoast/dist/css/iziToast.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/izitoast/dist/js/iziToast.min.js"></script>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Fileinput CSS y JS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-fileinput/css/fileinput.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-fileinput/js/fileinput.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-fileinput/js/locales/es.js"></script>
+
+    <!-- Estilos personalizados -->
+    <style>
+        .navbar {
+            background-color: #343a40;
+            padding: 1rem;
+        }
+        .navbar-nav .nav-link {
+            font-size: 1.1rem;
+            padding: 10px 15px;
+            transition: all 0.3s ease;
+        }
+        .navbar-nav .nav-link:hover {
+            color: #f8f9fa !important;
+            background-color: #495057;
+            border-radius: 5px;
+        }
+        .dropdown-menu {
+            background-color: #343a40;
+            border: none;
+        }
+        .dropdown-item {
+            color: #f8f9fa !important;
+        }
+        .dropdown-item:hover {
+            background-color: #495057;
+        }
+        .social-icons a {
+            color: #f8f9fa;
+            font-size: 1.2rem;
+            margin: 0 8px;
+            transition: transform 0.3s, color 0.3s;
+        }
+        .social-icons a:hover {
+            transform: scale(1.2);
+            color: #17a2b8;
+        }
+        .container {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- Barra de navegación superior -->
+<nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#"><i class="fas fa-boxes"></i> Abastecimiento de Materiales</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item"><a class="nav-link active" href="/"><i class="fas fa-home"></i> Inicio</a></li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Materiales</a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="/listadoMaterial/"><i class="fas fa-eye"></i> Ver Materiales</a></li>
+                        <li><a class="dropdown-item" href="/nuevoMaterial/"><i class="fas fa-plus"></i> Agregar Material</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Distribuidor</a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="/listadoDistribuidor/"><i class="fas fa-eye"></i> Ver Distribuidores</a></li>
+                        <li><a class="dropdown-item" href="/nuevoDistribuidor/"><i class="fas fa-user-plus"></i> Agregar Distribuidor</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Almacén</a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="/listadoAlmacen/"><i class="fas fa-eye"></i> Ver Almacenes</a></li>
+                        <li><a class="dropdown-item" href="/nuevoAlmacen/"><i class="fas fa-plus"></i> Agregar Almacén</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Pedidos</a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="/listadoPedido/"><i class="fas fa-eye"></i> Ver Pedidos</a></li>
+                        <li><a class="dropdown-item" href="/nuevoPedido/"><i class="fas fa-plus"></i> Agregar Pedido</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        <div class="d-flex align-items-center social-icons">
+            <span class="text-white me-3"><i class="fas fa-map-marker-alt"></i> Quito, Ecuador</span>
+            <a href="https://facebook.com" target="_blank"><i class="fab fa-facebook-f"></i></a>
+            <a href="https://twitter.com" target="_blank"><i class="fab fa-twitter"></i></a>
+            <a href="https://instagram.com" target="_blank"><i class="fab fa-instagram"></i></a>
+        </div>
+    </div>
+</nav>
+
+<!-- Contenido de la página -->
+<div class="container mt-4">
+    {% block contenido %}
+    {% endblock %}
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Script para iziToast -->
+{% if messages %}
+<script>
+    $(document).ready(function () {
+        let messages = [];
+        {% for message in messages %}
+            messages.push({text: "{{ message }}", type: "{{ message.tags }}"}); 
+        {% endfor %}
+        messages.forEach(msg => {
+            iziToast[msg.type.includes("success") ? 'success' : msg.type.includes("error") ? 'error' : msg.type.includes("warning") ? 'warning' : 'info']({
+                title: msg.type.charAt(0).toUpperCase() + msg.type.slice(1),
+                message: msg.text,
+                position: 'topRight'
+            });
+        });
+    });
+</script>
+{% endif %}
+
+</body>
+</html>
